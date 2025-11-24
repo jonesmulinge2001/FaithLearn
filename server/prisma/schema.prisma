@@ -1,0 +1,101 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client"
+  output   = "../generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id                   String    @id @default(uuid())
+  email                String    @unique
+  password             String
+  name                 String
+  role                 UserRole  @default(LEARNER)
+  phone                String?   @unique
+  profile              Profile?
+  createdAt            DateTime  @default(now())
+  updatedAt            DateTime  @updatedAt
+  isVerified           Boolean   @default(false)
+  resetToken           String?
+  resetTokenExpiresAt  DateTime?
+  verifyToken          String
+  verifyTokenExpiresAt DateTime?
+  lastLogin            DateTime?
+  isDeleted            Boolean   @default(false)
+  deletedAt            DateTime?
+
+  studentLessonQuestions StudentLessonQuestion[]
+
+  lessonAnswers StudentLessonAnswer[]
+}
+
+enum UserRole {
+  ADMIN
+  LEARNER
+}
+
+model Profile {
+  id           String  @id @default(uuid())
+  name         String
+  bio          String?
+  profileImage String?
+  coverPhoto   String?
+  // Relation to User
+  userId       String  @unique
+  user         User    @relation(fields: [userId], references: [id])
+}
+
+model Lesson {
+  id        String   @id @default(uuid())
+  title     String
+  content   String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  isDeleted Boolean @default(false)
+
+  questions        LessonQuestion[]
+  studentQuestions StudentLessonQuestion[]
+}
+
+model LessonQuestion {
+  id       String  @id @default(uuid())
+  lessonId String
+  question String
+  answer   String?
+
+  lesson  Lesson                @relation(fields: [lessonId], references: [id], onDelete: Cascade)
+  answers StudentLessonAnswer[]
+}
+
+model StudentLessonQuestion {
+  id        String   @id @default(uuid())
+  lessonId  String
+  studentId String
+  question  String
+  answer    String?
+  createdAt DateTime @default(now())
+
+  lesson  Lesson @relation(fields: [lessonId], references: [id], onDelete: Cascade)
+  // If you have a User model:
+  student User   @relation(fields: [studentId], references: [id])
+}
+
+model StudentLessonAnswer {
+  id         String   @id @default(uuid())
+  studentId  String
+  questionId String
+  answer     String
+  createdAt  DateTime @default(now())
+
+  student  User           @relation(fields: [studentId], references: [id])
+  question LessonQuestion @relation(fields: [questionId], references: [id], onDelete: Cascade)
+}
