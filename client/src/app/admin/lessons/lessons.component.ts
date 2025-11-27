@@ -13,6 +13,9 @@ export class LessonsComponent implements OnInit {
   lessons: Lesson[] = [];
   loading = true;
 
+  showDeleteModal = false;
+lessonToDelete: string | null = null;
+
   constructor(private lessonService: LessonService) {}
 
   ngOnInit(): void {
@@ -24,6 +27,32 @@ export class LessonsComponent implements OnInit {
       error: () => {
         this.loading = false;
       },
+    });
+  }
+
+  openDeleteModal(id: string) {
+    this.lessonToDelete = id;
+    this.showDeleteModal = true;
+  }
+  
+  closeDeleteModal() {
+    this.showDeleteModal = false;
+    this.lessonToDelete = null;
+  }
+
+  confirmDelete() {
+    if (!this.lessonToDelete) return;
+  
+    this.lessonService.deleteLesson(this.lessonToDelete).subscribe({
+      next: () => {
+        this.lessons = this.lessons.filter(l => l.id !== this.lessonToDelete);
+        this.closeDeleteModal();
+      },
+      error: (err) => {
+        console.error(err);
+        this.closeDeleteModal();
+        alert("Failed to delete lesson");
+      }
     });
   }
 }

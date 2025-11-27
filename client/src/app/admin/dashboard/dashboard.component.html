@@ -1,1 +1,99 @@
-<p>dashboard works!</p>
+<div class="min-h-screen p-8" style="background-color: #f8f7ea;">
+
+  <!-- Dashboard Header -->
+  <header class="mb-8 text-center">
+    <h1 class="text-4xl font-extrabold text-gray-800 mb-2">📖 Scripture Path Dashboard</h1>
+    <p class="text-lg text-gray-700">Grow in faith and understanding through our Bible lessons</p>
+  </header>
+
+  <!-- Overview Cards -->
+  <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-10">
+    <!-- Total Lessons Card -->
+    <div class="rounded-xl shadow-lg p-6 text-white"
+         style="background: linear-gradient(to right, #d0ad3b, #446add)">
+      <div class="flex items-center justify-between mb-4">
+        <span class="text-3xl">📘</span>
+      </div>
+      <h2 class="text-2xl font-bold">{{ lessons.length }}</h2>
+      <p class="text-white/90 mt-1">Total Lessons Created</p>
+    </div>
+
+    <!-- Total Students Card -->
+    <div class="rounded-xl shadow-lg p-6 text-white"
+         style="background: linear-gradient(to right, #d0ad3b, #446add)">
+      <div class="flex items-center justify-between mb-4">
+        <span class="text-3xl">👨‍🎓</span>
+      </div>
+      <h2 class="text-2xl font-bold">{{ totalStudents }}</h2>
+      <p class="text-white/90 mt-1">Total Students Enrolled</p>
+    </div>
+
+    <!-- Completed Lessons Card -->
+    <div class="rounded-xl shadow-lg p-6 text-white"
+         style="background: linear-gradient(to right, #d0ad3b, #446add)">
+      <div class="flex items-center justify-between mb-4">
+        <span class="text-3xl">✅</span>
+      </div>
+      <h2 class="text-2xl font-bold">{{ totalCompletedLessons }}</h2>
+      <p class="text-white/90 mt-1">Lessons Completed by Students</p>
+    </div>
+  </div>
+
+  <!-- Lessons Grid -->
+  <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+    <div *ngFor="let lesson of lessons; trackBy: trackById"
+         class="rounded-xl shadow-lg p-6 cursor-pointer transform transition duration-300 hover:scale-105"
+         [ngStyle]="{'background': 'linear-gradient(to right, #d0ad3b, #446add)'}"
+         (click)="selectLesson(lesson)">
+      <div class="flex items-center justify-between mb-4">
+        <span class="text-white font-bold text-lg">📘</span>
+        <span class="text-white text-sm">{{ lesson.createdAt | date:'mediumDate' }}</span>
+      </div>
+      <h2 class="text-white text-2xl font-semibold mb-2">{{ lesson.title }}</h2>
+      <p class="text-white/90">{{ lesson.content | slice:0:80 }}...</p>
+      <p class="mt-2 text-white/80 text-sm">Students Enrolled: {{ lesson.studentCount || 0 }}</p>
+    </div>
+  </div>
+
+  <!-- Selected Lesson Details -->
+  <div *ngIf="selectedLesson" class="mt-10 p-6 rounded-xl shadow-lg bg-white">
+    <div class="mb-4">
+      <h2 class="text-3xl font-bold text-gray-800 mb-2">✝️ {{ selectedLesson.title }}</h2>
+      <p class="text-gray-700">{{ selectedLesson.content }}</p>
+    </div>
+
+    <!-- Questions Section -->
+    <div class="mt-6">
+      <h3 class="text-xl font-semibold text-gray-800 mb-3">📝 Lesson Questions</h3>
+      <div *ngIf="loadingQuestions" class="text-gray-500">Loading questions...</div>
+      <ul *ngIf="!loadingQuestions && (selectedLesson.questions || []).length > 0" class="space-y-3">
+        <li *ngFor="let question of selectedLesson.questions || []; trackBy: trackById"
+            class="p-4 rounded-lg shadow-md bg-gradient-to-r from-[#d0ad3b] to-[#446add] text-white">
+          <span class="text-lg">💬</span> {{ question.question }}
+        </li>
+      </ul>
+      <div *ngIf="!loadingQuestions && !(selectedLesson.questions || []).length" class="text-gray-500">
+        No questions yet for this lesson.
+      </div>
+    </div>
+
+    <!-- Students Completion Section -->
+    <div class="mt-6">
+      <h3 class="text-xl font-semibold text-gray-800 mb-3">👨‍🎓 Student Progress</h3>
+      <ng-container *ngIf="selectedLesson as lesson">
+        <ul *ngIf="(lesson.students || []).length > 0" class="space-y-2">
+          <li *ngFor="let student of lesson.students" class="p-3 rounded-md border shadow-sm flex justify-between items-center">
+            <span>{{ student.name }}</span>
+            <span class="text-gray-600 text-sm">Lessons Completed: {{ student.completedLessons || 0 }}</span>
+          </li>
+        </ul>
+      </ng-container>
+
+
+
+
+      <div *ngIf="!(selectedLesson.students || []).length" class="text-gray-500">No students enrolled yet.</div>
+    </div>
+  </div>
+
+</div>
