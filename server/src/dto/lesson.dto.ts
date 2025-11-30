@@ -18,6 +18,8 @@ export class CreateLessonDto {
   @IsNotEmpty()
   content: string;
 
+  courseId: string; 
+
   @IsArray()
   @ValidateNested({ each: true })
   @Type(() => LessonQuestionDto)
@@ -27,6 +29,8 @@ export class CreateLessonDto {
 export class UpdateLessonDto {
   @IsString()
   title?: string;
+
+  courseId?: string;
 
   @IsString()
   content?: string;

@@ -1,5 +1,12 @@
 /* eslint-disable prettier/prettier */
-  
+/* eslint-disable @typescript-eslint/no-unsafe-assignment */
+/* eslint-disable prettier/prettier */
+/* eslint-disable @typescript-eslint/no-unsafe-member-access */
+/* eslint-disable @typescript-eslint/require-await */
+/* eslint-disable @typescript-eslint/no-unsafe-call */
+/* eslint-disable @typescript-eslint/no-unsafe-return */
+/* eslint-disable prettier/prettier */
+
 /* eslint-disable prettier/prettier */
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { PrismaClient } from 'generated/prisma/client';
@@ -11,31 +18,81 @@ export class LessonsService {
   constructor() {}
   private prisma = new PrismaClient();
 
+
+  // =========================
+// COURSE METHODS
+// =========================
+
+// Create course
+async createCourse(data: { title: string; description?: string }) {
+  return this.prisma.course.create({
+    data,
+  });
+}
+
+// Get all courses
+async findAllCourses() {
+  return this.prisma.course.findMany({
+    where: { isDeleted: false },
+    orderBy: { createdAt: 'desc' },
+  });
+}
+
+// Get one course
+async findCourse(id: string) {
+  const course = await this.prisma.course.findFirst({
+    where: { id, isDeleted: false },
+  });
+
+  if (!course) throw new NotFoundException('Course not found');
+  return course;
+}
+
+// Update course
+async updateCourse(id: string, data: { title?: string; description?: string }) {
+  await this.findCourse(id);
+  return this.prisma.course.update({
+    where: { id },
+    data,
+  });
+}
+
+// Soft delete course
+async deleteCourse(id: string) {
+  const course = await this.findCourse(id);
+  return this.prisma.course.update({
+    where: { id },
+    data: { isDeleted: true },
+  });
+}
+
+
+
   // Create Lesson + Questions
   async createLesson(dto: CreateLessonDto) {
     return this.prisma.lesson.create({
       data: {
         title: dto.title,
         content: dto.content,
+        courseId: dto.courseId,
         questions: {
-          create: dto.questions.map((q) => ({
-            question: q.question,
-          })),
+          create: dto.questions.map((q) => ({ question: q.question })),
         },
       },
       include: { questions: true },
     });
   }
+  
 
-  // Get all lessons
-  async findAll() {
+  // Get all lessons (only those not deleted)
+  async findAllByCourse(courseId: string) {
     return this.prisma.lesson.findMany({
-      include: {
-        questions: true,
-      },
+      where: { courseId, isDeleted: false },
+      include: { questions: true },
       orderBy: { createdAt: 'desc' },
     });
   }
+  
 
   // Get single lesson
   async findOne(id: string) {
@@ -51,26 +108,44 @@ export class LessonsService {
   // Update lesson basic info
   async update(id: string, dto: UpdateLessonDto) {
     await this.findOne(id);
-
     return this.prisma.lesson.update({
-      where: { id, isDeleted: false},
+      where: { id },
       data: {
         title: dto.title,
         content: dto.content,
+        courseId: dto.courseId, // optional
       },
     });
   }
 
-// Soft delete lesson
-async remove(id: string) {
-    await this.findOne(id);
-  
-    return this.prisma.lesson.update({
+  async findOneWithCourse(id: string) {
+    const lesson = await this.prisma.lesson.findUnique({
       where: { id },
-      data: { isDeleted: true },
+      include: { course: true, questions: true },
     });
+    if (!lesson) throw new NotFoundException('Lesson not found');
+    return lesson;
   }
   
+  // Get ALL lessons
+async findAll() {
+  return this.prisma.lesson.findMany({
+    where: { isDeleted: false },
+    include: { questions: true },
+    orderBy: { createdAt: 'desc' },
+  });
+}
+
+  // Soft delete lesson
+  async deletelesson(id: string) {
+    const lesson = await this.prisma.lesson.findFirst({
+      where: { id, isDeleted: false },
+      include: { questions: true },
+    });
+
+    if (!lesson) throw new NotFoundException('Lesson not found');
+    return lesson;
+  }
 
   // Student submits question about a lesson
   async submitStudentQuestion(
@@ -202,6 +277,17 @@ async remove(id: string) {
     return this.prisma.studentLessonAnswer.update({
       where: { id: answerId },
       data: { answer: reply },
+    });
+  }
+
+  async getStudentsForLesson(lessonId: string) {
+    return this.prisma.studentLesson.findMany({
+      where: { lessonId },
+      include: {
+        student: {
+          select: { id: true, name: true, email: true },
+        },
+      },
     });
   }
   

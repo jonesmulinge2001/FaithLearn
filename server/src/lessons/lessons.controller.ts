@@ -1,4 +1,6 @@
 /* eslint-disable prettier/prettier */
+/* eslint-disable @typescript-eslint/no-unsafe-return */
+/* eslint-disable prettier/prettier */
 import {
   Controller,
   Get,
@@ -20,6 +22,51 @@ import { Permission } from 'src/permissions/permission.enums';
 @Controller('lessons')
 export class LessonsController {
   constructor(private readonly lessonsService: LessonsService) {}
+
+  // CREATE COURSE
+  @UseGuards(JwtAuthGuard, PermissionGuard)
+  @RequirePermissions(Permission.MANAGE_LESSONS)
+  @Post('/courses')
+  async createCourse(@Body() data: { title: string; description?: string }) {
+    return this.lessonsService.createCourse(data);
+  }
+
+  // GET ALL COURSES
+  @Get('/courses')
+  async getAllCourses() {
+    return this.lessonsService.findAllCourses();
+  }
+
+  // GET SINGLE COURSE
+  @Get('/courses/:id')
+  async findCourse(@Param('id') id: string) {
+    return this.lessonsService.findCourse(id);
+  }
+
+  // GET lessons by course
+@Get('course/:courseId')
+async getLessonsByCourse(@Param('courseId') courseId: string) {
+  return this.lessonsService.findAllByCourse(courseId);
+}
+
+
+  // UPDATE COURSE
+  @UseGuards(JwtAuthGuard, PermissionGuard)
+  @RequirePermissions(Permission.MANAGE_LESSONS)
+  @Patch('/courses/:id')
+  async updateCourse(
+    @Param('id') id: string,
+    @Body() data: { title?: string; description?: string },
+  ) {
+    return this.lessonsService.updateCourse(id, data);
+  }
+  // DELETE COURSE
+  @UseGuards(JwtAuthGuard, PermissionGuard)
+  @RequirePermissions(Permission.MANAGE_LESSONS)
+  @Delete('/courses/:id')
+  async deleteCourse(@Param('id') id: string) {
+    return this.lessonsService.deleteCourse(id);
+  }
 
   // Create lesson
   @UseGuards(JwtAuthGuard, PermissionGuard)
@@ -54,7 +101,7 @@ export class LessonsController {
   @RequirePermissions(Permission.MANAGE_LESSONS)
   @Delete(':id')
   async remove(@Param('id') id: string) {
-    return this.lessonsService.remove(id);
+    return this.lessonsService.deletelesson(id);
   }
 
   // Student submits question about a lesson
@@ -134,5 +181,12 @@ export class LessonsController {
     @Body('reply') reply: string,
   ) {
     return this.lessonsService.replyToStudentAnswer(answerId, reply);
+  }
+
+  @UseGuards(JwtAuthGuard, PermissionGuard)
+  @RequirePermissions(Permission.MANAGE_LESSONS)
+  @Get(':lessonId/students')
+  async getStudentsForLesson(@Param('lessonId') lessonId: string) {
+    return this.lessonsService.getStudentsForLesson(lessonId);
   }
 }

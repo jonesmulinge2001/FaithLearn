@@ -3,11 +3,22 @@ POST http://localhost:3000/auth/register
 Content-Type: application/json
 
 {
-  "name": "Susan Wanjiku",
+  "name": "KX Mulinge",  
   "email": "jonathanmulingemwandi@gmail.com",
   "password": "shal00j1010",
-  "phone": "+254730867702",
+  "phone": "+254733767702",
   "role": "ADMIN"
+}
+
+### Register
+POST http://localhost:3000/auth/register
+Content-Type: application/json
+
+{
+  "name": "KX Mulinge",
+  "email": "j26515762@gmail.com",
+  "password": "shal00j1010",
+  "phone": "+254733867702"
 }
 
 ### verify email
@@ -16,7 +27,7 @@ Content-Type: application/json
 
 {
   "email": "jonathanmulingemwandi@gmail.com",
-  "code":"32603"
+  "code":"23154"
 }
 
 ### request verification code
@@ -24,7 +35,7 @@ POST http://localhost:3000/auth/request-verification-code
 Content-Type: application/json
 
 {
-  "email": "jonathanmwandi@gmail.com"
+  "email": "jonathanmulingemwandi@gmail.com"
 }
 
 ### login 

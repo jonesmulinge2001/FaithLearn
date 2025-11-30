@@ -1,121 +1,155 @@
 ### BASE URL
 @baseUrl = http://localhost:3000
 
-### AUTH TOKEN
-@token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJmYTNjMzdhOC01MGE1LTQzNzgtYmZhNi00ZmRlZWU0ZmZkZjIiLCJlbWFpbCI6ImpvbmF0aGFubXVsaW5nZW13YW5kaUBnbWFpbC5jb20iLCJyb2xlIjoiQURNSU4iLCJpYXQiOjE3NjM3NjgxNDYsImV4cCI6MTc2Mzg1NDU0Nn0.HQzpxGkOd2F4rJJL3d0YfoEuXvFhufDxv55O9ar3I4Q
-@token2 = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJjN2Q0NzVmZS01Y2Q5LTRjYjktOWM1OS03NmVlZmNhNWIzZjAiLCJlbWFpbCI6ImpvbmF0aGFubXdhbmRpQGdtYWlsLmNvbSIsInJvbGUiOiJMRUFSTkVSIiwiaWF0IjoxNzYzNzY4MTcxLCJleHAiOjE3NjM4NTQ1NzF9.AtiXWd2eHJN-xKGXp37LGY9hPlGqInIL9rTN3b2uFgs
+### AUTH TOKENS
+@adminToken = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIzMTBmOWI5NS1hYjQ3LTRjZjUtYjhmYi00NmY1MjIyYzRkMDQiLCJlbWFpbCI6ImpvbmF0aGFubXVsaW5nZW13YW5kaUBnbWFpbC5jb20iLCJyb2xlIjoiQURNSU4iLCJpYXQiOjE3NjQ0NTQ4NjUsImV4cCI6MTc2NDU0MTI2NX0.xV7VBPre5-mRD-DGFQCcXfPm8nbcMimIeq4U3TiTjHs
+@studentToken = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJjN2Q0...
 
 #######################################################
-### 1. CREATE LESSON (Admin)
+# A. CREATE COURSE (Admin)
+#######################################################
+POST {{baseUrl}}/lessons/courses
+Authorization: Bearer {{adminToken}}
+Content-Type: application/json
+
+{
+  "title": "Christian Foundations"
+}
+
+#######################################################
+# B. GET ALL COURSES
+#######################################################
+GET {{baseUrl}}/lessons/courses
+Authorization: Bearer {{adminToken}}
+
+#######################################################
+# C. GET SINGLE COURSE
+#######################################################
+GET {{baseUrl}}/lessons/courses/cmikux2ar0000tud81o3kj9ca
+Authorization: Bearer {{adminToken}}
+
+#######################################################
+# D. UPDATE COURSE (Admin)
+#######################################################
+PATCH {{baseUrl}}/lessons/courses/cmikux2ar0000tud81o3kj9ca
+Authorization: Bearer {{adminToken}}
+Content-Type: application/json
+
+{
+  "title": "Christian Teachings Foundations"
+}
+
+#######################################################
+# E. DELETE COURSE (Admin)
+#######################################################
+DELETE {{baseUrl}}/courses/COURSE_ID_HERE
+Authorization: Bearer {{adminToken}}
+
+#######################################################
+# F. GET ALL LESSONS BY COURSE
+#######################################################
+GET {{baseUrl}}/lessons/courses/cmikux2ar0000tud81o3kj9ca
+Authorization: Bearer {{adminToken}}
+
+#######################################################
+# G. CREATE LESSON
 #######################################################
 POST {{baseUrl}}/lessons
-Authorization: Bearer {{token2}}
+Authorization: Bearer {{adminToken}}
 Content-Type: application/json
 
 {
   "title": "Understanding God’s Grace",
-  "content": "This lesson explores the meaning, power, and impact of God's grace in a believer's life...",
+  "content": "This lesson explores the meaning, power, and impact of God's grace...",
+  "courseId": "cmikux2ar0000tud81o3kj9ca",
   "questions": [
-    {
-      "question": "How would you define God’s grace in your own words?"
-    },
-    {
-      "question": "Why is grace essential for salvation?"
-    },
-    {
-      "question": "Can grace and works coexist in Christian life?"
-    }
+    { "question": "How would you define God’s grace?" },
+    { "question": "Why is grace essential for salvation?" }
   ]
 }
 
-
 #######################################################
-### 2. GET ALL LESSONS
+# H. GET ALL LESSONS
 #######################################################
 GET {{baseUrl}}/lessons
-Authorization: Bearer {{token2}}
-
-
-#######################################################
-### 3. GET SINGLE LESSON
-#######################################################
-GET {{baseUrl}}/lessons/77212c30-0b91-469f-acf6-5bc40fb345dd
-Authorization: Bearer {{token2}}
-
+Authorization: Bearer {{studentToken}}
 
 #######################################################
-### 4. UPDATE LESSON
+# I. GET SINGLE LESSON
 #######################################################
-PATCH {{baseUrl}}/lessons/77212c30-0b91-469f-acf6-5bc40fb345dd
-Authorization: Bearer {{{{token2}}}}
+GET {{baseUrl}}/lessons/30359591-fb26-45b4-a0d1-30805f2e50d8
+Authorization: Bearer {{studentToken}}
+
+#######################################################
+# J. UPDATE LESSON (Admin)
+#######################################################
+PATCH {{baseUrl}}/lessons/30359591-fb26-45b4-a0d1-30805f2e50d8
+Authorization: Bearer {{adminToken}}
 Content-Type: application/json
 
 {
   "title": "Introduction to Christian Faith"
 }
 
-
 #######################################################
-### 5. DELETE LESSON
+# K. DELETE LESSON (Admin)
 #######################################################
 DELETE {{baseUrl}}/lessons/LESSON_ID_HERE
-Authorization: Bearer {{token}}
+Authorization: Bearer {{adminToken}}
 
 #######################################################
-### 6. STUDENT: ASK QUESTION ABOUT A LESSON
+# L. STUDENT: SUBMIT ANSWER TO LESSON QUESTION
 #######################################################
-
-POST {{baseUrl}}/lessons/answers/c7d475fe-5cd9-4cb9-9c59-76eefca5b3f0/21d59676-b591-4972-8bc6-45c7f3284492
-Authorization: Bearer {{token2}}
+POST {{baseUrl}}/lessons/answers/LESSON_ID/QUESTION_ID
+Authorization: Bearer {{studentToken}}
 Content-Type: application/json
 
 {
   "answer": "This is my answer to the lesson question."
 }
 
-
-
 #######################################################
-### 6. STUDENT: ASK QUESTION ABOUT A LESSON
+# M. STUDENT: ASK QUESTION ABOUT LESSON
 #######################################################
-POST {{baseUrl}}/lessons/77212c30-0b91-469f-acf6-5bc40fb345dd/questions/c7d475fe-5cd9-4cb9-9c59-76eefca5b3f0
-Authorization: Bearer {{token2}}
+POST {{baseUrl}}/lessons/LESSON_ID/questions/STUDENT_ID
+Authorization: Bearer {{studentToken}}
 Content-Type: application/json
 
 {
   "question": "I didn't understand the part about Abraham's faith, please explain?"
 }
 
-
 #######################################################
-### 7. ADMIN: GET ALL STUDENT QUESTIONS
+# N. ADMIN: GET ALL STUDENT QUESTIONS
 #######################################################
 GET {{baseUrl}}/lessons/questions/all
-Authorization: Bearer {{token}}
-
-
-#######################################################
-### 8. ADMIN: GET QUESTIONS BY LESSON
-#######################################################
-GET {{baseUrl}}/lessons/77212c30-0b91-469f-acf6-5bc40fb345dd/questions
-Authorization: Bearer {{token}}
-
+Authorization: Bearer {{adminToken}}
 
 #######################################################
-### 9. ADMIN: GET QUESTIONS BY STUDENT
+# O. ADMIN: GET QUESTIONS BY LESSON
 #######################################################
-GET {{baseUrl}}/lessons/student/c7d475fe-5cd9-4cb9-9c59-76eefca5b3f0/questions
-Authorization: Bearer {{token}}
-
+GET {{baseUrl}}/lessons/LESSON_ID/questions
+Authorization: Bearer {{adminToken}}
 
 #######################################################
-### 10. ADMIN reply to student answers
+# P. ADMIN: GET QUESTIONS BY STUDENT
 #######################################################
+GET {{baseUrl}}/lessons/student/STUDENT_ID/questions
+Authorization: Bearer {{adminToken}}
 
-POST {{baseUrl}}/lessons/answers/reply/:answerId'
-Authorization: Bearer {{token}}
+#######################################################
+# Q. ADMIN: REPLY TO STUDENT QUESTION
+#######################################################
+POST {{baseUrl}}/lessons/answers/reply/ANSWER_ID
+Authorization: Bearer {{adminToken}}
 Content-Type: application/json
 
 {
   "answer": "This is the admin response to your question."
 }
+
+#######################################################
+# R. ADMIN: GET STUDENTS FOR LESSON
+#######################################################
+GET {{baseUrl}}/lessons/LESSON_ID/students
+Authorization: Bearer {{adminToken}}

@@ -35,6 +35,7 @@ model User {
 
   studentLessonQuestions StudentLessonQuestion[]
 
+  studentLessons StudentLesson[]
   lessonAnswers StudentLessonAnswer[]
 }
 
@@ -62,8 +63,21 @@ model Lesson {
   updatedAt DateTime @updatedAt
   isDeleted Boolean @default(false)
 
+  courseId  String 
+
+  course    Course   @relation(fields: [courseId], references: [id])
   questions        LessonQuestion[]
   studentQuestions StudentLessonQuestion[]
+  studentLessons StudentLesson[] 
+}
+
+model Course {
+  id       String   @id @default(cuid())
+  title    String
+  lessons  Lesson[]
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  isDeleted Boolean @default(false)
 }
 
 model LessonQuestion {
@@ -98,4 +112,16 @@ model StudentLessonAnswer {
 
   student  User           @relation(fields: [studentId], references: [id])
   question LessonQuestion @relation(fields: [questionId], references: [id], onDelete: Cascade)
+}
+
+model StudentLesson {
+  id        String   @id @default(uuid())
+  studentId String
+  lessonId  String
+  startedAt DateTime @default(now())
+
+  student User   @relation(fields: [studentId], references: [id])
+  lesson  Lesson @relation(fields: [lessonId], references: [id])
+
+  @@unique([studentId, lessonId]) // prevent duplicate enrollment
 }
