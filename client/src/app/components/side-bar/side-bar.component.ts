@@ -14,7 +14,7 @@ export class SidebarComponent implements OnInit {
 
   navItems = [
     { label: 'Feed', link: '/home', icon: 'dynamic_feed' },
-    { label: 'Network', link: '/network', icon: 'diversity_3' },
+    { label: 'Lessons', link: '/lessons', icon: 'diversity_3' },
     { label: 'Create', link: '/create', icon: 'add_circle' },
     { label: 'Resources', link: '/resources', icon: 'work' },
     { label: 'Opportunities', link: '/opportunities', icon: 'business_center' },

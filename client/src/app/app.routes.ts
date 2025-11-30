@@ -12,6 +12,8 @@ import { DashboardComponent } from './admin/dashboard/dashboard.component';
 import { CreateLessonComponent } from './admin/create-lesson/create-lesson.component';
 import { LessonsComponent } from './admin/lessons/lessons.component';
 import { LessonDetailsComponent } from './admin/lesson-details/lesson-details.component';
+import { StudentLessonsComponent } from './components/studentlessons/studentlessons.component';
+import { LessonViewComponent } from './components/lesson-view/lesson-view.component';
 
 export const routes: Routes = [
     // ==== Public routes (no layout) ====
@@ -29,6 +31,8 @@ export const routes: Routes = [
     children: [
       { path: '', component: HomeComponent },
       { path: 'home', component: HomeComponent },
+      { path: 'lessons', component: StudentLessonsComponent },
+      { path: 'lessons/:id', component: LessonViewComponent },
     ]
   },
 

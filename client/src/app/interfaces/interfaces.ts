@@ -50,44 +50,57 @@ export interface RegisterRequest {
     password: string;
   }
 
-  export interface LessonQuestion {
-    id?: string;
-    question: string;
-    createdAt?: string;
-  }
-  
-  export interface Lesson {
-    id: string;
-    title: string;
-    content: string;
-    questions?: LessonQuestion[];
-    createdAt?: string;
-  }
-  
-  export interface CreateLessonDto {
-    title: string;
-    content: string;
-    questions?: { question: string }[];
-  }
+  // src/app/models/lesson.model.ts
 
-  export interface StudentQuestion {
-    id: string;
-    lessonId: string;
-    studentId: string;
-    question: string;
-    createdAt?: string;
-  }
+export interface LessonQuestion {
+  id?: string;
+  question: string;
+  createdAt?: string;
+  answer?: string; // optional admin/student reply
+}
 
-  export interface StudentAnswer {
-    id: string;
-    lessonId: string;
-    studentId: string;
-    questionId: string;
-    answer: string;
-    createdAt?: string;
-  }
-  
-  export interface AdminReply {
-    answer: string;
-  }
-  
+export interface Lesson {
+  id: string;
+  title: string;
+  content: string;
+  courseId?: string; // optional if linking to courses
+  questions?: LessonQuestion[];
+  createdAt?: string;
+}
+
+export interface CreateLessonDto {
+  title: string;
+  content: string;
+  courseId?: string;
+  questions?: { question: string }[];
+}
+
+export interface StudentQuestion {
+  id: string;
+  lessonId: string;
+  studentId: string;
+  question: string;
+  createdAt?: string;
+  answer?: string; // admin reply
+}
+
+export interface StudentAnswer {
+  id: string;
+  lessonId: string;
+  studentId: string;
+  questionId: string;
+  answer: string;
+  createdAt?: string;
+}
+
+export interface AdminReply {
+  answer: string;
+}
+
+export interface Course {
+  id: string;
+  title: string;
+  description?: string;
+  lessons?: Lesson[];
+  createdAt?: string;
+}

@@ -1,99 +1,57 @@
-<div class="min-h-screen p-8" style="background-color: #f8f7ea;">
+<!-- src/app/components/dashboard/dashboard.component.html -->
 
-  <!-- Dashboard Header -->
-  <header class="mb-8 text-center">
-    <h1 class="text-4xl font-extrabold text-gray-800 mb-2">📖 Scripture Path Dashboard</h1>
-    <p class="text-lg text-gray-700">Grow in faith and understanding through our Bible lessons</p>
-  </header>
+<div class="min-h-screen p-6" style="background-color: #f8f6e7;">
+  <h1 class="text-3xl font-bold mb-6 text-gray-800">Admin Dashboard</h1>
 
-  <!-- Overview Cards -->
-  <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-10">
-    <!-- Total Lessons Card -->
-    <div class="rounded-xl shadow-lg p-6 text-white"
-         style="background: linear-gradient(to right, #d0ad3b, #446add)">
-      <div class="flex items-center justify-between mb-4">
-        <span class="text-3xl">📘</span>
+  <!-- Courses Section -->
+  <div class="mb-6">
+    <h2 class="text-xl font-semibold mb-3">Courses</h2>
+
+    <div *ngIf="loadingCourses" class="text-gray-600">Loading courses...</div>
+    <div *ngIf="errorMessage" class="text-red-600">{{ errorMessage }}</div>
+
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+      <div 
+        *ngFor="let course of courses" 
+        (click)="selectCourse(course)" 
+        class="cursor-pointer p-4 rounded-lg shadow-md transition-transform transform hover:scale-105"
+        [ngClass]="{'border-4 border-yellow-600': selectedCourse?.id === course.id}"
+        style="background-color: #d2ae39; color: #fff;"
+      >
+        <h3 class="text-lg font-bold">{{ course.title }}</h3>
+        <p class="text-sm mt-1">{{ course.description || 'No description' }}</p>
       </div>
-      <h2 class="text-2xl font-bold">{{ lessons.length }}</h2>
-      <p class="text-white/90 mt-1">Total Lessons Created</p>
-    </div>
-
-    <!-- Total Students Card -->
-    <div class="rounded-xl shadow-lg p-6 text-white"
-         style="background: linear-gradient(to right, #d0ad3b, #446add)">
-      <div class="flex items-center justify-between mb-4">
-        <span class="text-3xl">👨‍🎓</span>
-      </div>
-      <h2 class="text-2xl font-bold">{{ totalStudents }}</h2>
-      <p class="text-white/90 mt-1">Total Students Enrolled</p>
-    </div>
-
-    <!-- Completed Lessons Card -->
-    <div class="rounded-xl shadow-lg p-6 text-white"
-         style="background: linear-gradient(to right, #d0ad3b, #446add)">
-      <div class="flex items-center justify-between mb-4">
-        <span class="text-3xl">✅</span>
-      </div>
-      <h2 class="text-2xl font-bold">{{ totalCompletedLessons }}</h2>
-      <p class="text-white/90 mt-1">Lessons Completed by Students</p>
     </div>
   </div>
 
-  <!-- Lessons Grid -->
-  <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-    <div *ngFor="let lesson of lessons; trackBy: trackById"
-         class="rounded-xl shadow-lg p-6 cursor-pointer transform transition duration-300 hover:scale-105"
-         [ngStyle]="{'background': 'linear-gradient(to right, #d0ad3b, #446add)'}"
-         (click)="selectLesson(lesson)">
-      <div class="flex items-center justify-between mb-4">
-        <span class="text-white font-bold text-lg">📘</span>
-        <span class="text-white text-sm">{{ lesson.createdAt | date:'mediumDate' }}</span>
-      </div>
-      <h2 class="text-white text-2xl font-semibold mb-2">{{ lesson.title }}</h2>
-      <p class="text-white/90">{{ lesson.content | slice:0:80 }}...</p>
-      <p class="mt-2 text-white/80 text-sm">Students Enrolled: {{ lesson.studentCount || 0 }}</p>
-    </div>
-  </div>
-
-  <!-- Selected Lesson Details -->
-  <div *ngIf="selectedLesson" class="mt-10 p-6 rounded-xl shadow-lg bg-white">
-    <div class="mb-4">
-      <h2 class="text-3xl font-bold text-gray-800 mb-2">✝️ {{ selectedLesson.title }}</h2>
-      <p class="text-gray-700">{{ selectedLesson.content }}</p>
+  <!-- Lessons Section -->
+  <div *ngIf="selectedCourse" class="mt-8">
+    <div class="flex items-center justify-between mb-4">
+      <h2 class="text-xl font-semibold">Lessons for: {{ selectedCourse.title }}</h2>
+      <button
+        (click)="clearSelectedCourse()"
+        class="px-4 py-2 rounded font-semibold text-white"
+        style="background-color: #d2ae39;"
+      >
+        Back to Courses
+      </button>
     </div>
 
-    <!-- Questions Section -->
-    <div class="mt-6">
-      <h3 class="text-xl font-semibold text-gray-800 mb-3">📝 Lesson Questions</h3>
-      <div *ngIf="loadingQuestions" class="text-gray-500">Loading questions...</div>
-      <ul *ngIf="!loadingQuestions && (selectedLesson.questions || []).length > 0" class="space-y-3">
-        <li *ngFor="let question of selectedLesson.questions || []; trackBy: trackById"
-            class="p-4 rounded-lg shadow-md bg-gradient-to-r from-[#d0ad3b] to-[#446add] text-white">
-          <span class="text-lg">💬</span> {{ question.question }}
-        </li>
-      </ul>
-      <div *ngIf="!loadingQuestions && !(selectedLesson.questions || []).length" class="text-gray-500">
-        No questions yet for this lesson.
+    <div *ngIf="loadingLessons" class="text-gray-600">Loading lessons...</div>
+    <div *ngIf="lessons.length === 0 && !loadingLessons" class="text-gray-700">No lessons found for this course.</div>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+      <div *ngFor="let lesson of lessons" class="p-4 rounded-lg shadow-md" style="background-color: #fff;">
+        <h3 class="text-lg font-bold text-gray-800">{{ lesson.title }}</h3>
+        <p class="text-sm text-gray-600 mt-2">{{ lesson.content | slice:0:100 }}...</p>
+        <div *ngIf="lesson?.questions?.length" class="mt-2">
+          <p class="font-semibold text-gray-700">Questions:</p>
+          <ul class="list-disc list-inside">
+            <li *ngFor="let q of lesson?.questions">{{ q.question }}</li>
+          </ul>
+        </div>
+        
       </div>
     </div>
-
-    <!-- Students Completion Section -->
-    <div class="mt-6">
-      <h3 class="text-xl font-semibold text-gray-800 mb-3">👨‍🎓 Student Progress</h3>
-      <ng-container *ngIf="selectedLesson as lesson">
-        <ul *ngIf="(lesson.students || []).length > 0" class="space-y-2">
-          <li *ngFor="let student of lesson.students" class="p-3 rounded-md border shadow-sm flex justify-between items-center">
-            <span>{{ student.name }}</span>
-            <span class="text-gray-600 text-sm">Lessons Completed: {{ student.completedLessons || 0 }}</span>
-          </li>
-        </ul>
-      </ng-container>
-
-
-
-
-      <div *ngIf="!(selectedLesson.students || []).length" class="text-gray-500">No students enrolled yet.</div>
-    </div>
   </div>
-
 </div>
