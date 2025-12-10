@@ -18,7 +18,7 @@ import {
   providedIn: 'root',
 })
 export class AuthService {
-  private readonly baseUrl = `${environment.apiUrl}/auth`;
+  private readonly baseUrl = `${environment.apiBase}/auth`;
   private loadingSubject = new BehaviorSubject<boolean>(false);
   public loading$ = this.loadingSubject.asObservable();
 
