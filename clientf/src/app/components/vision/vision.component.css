@@ -1,0 +1,13 @@
+.animate-typing {
+    animation: typing 4s steps(40, end), blink 1s infinite;
+  }
+  
+  @keyframes typing {
+    from { width: 0 }
+    to { width: 100% }
+  }
+  
+  @keyframes blink {
+    50% { border-color: transparent }
+  }
+  
