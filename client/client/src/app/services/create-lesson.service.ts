@@ -3,12 +3,13 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { Course, CreateLessonDto, Lesson, StudentQuestion, StudentAnswer } from '../interfaces/interfaces';
+import { environment } from '../../environments/environment';
 
 @Injectable({
   providedIn: 'root',
 })
 export class LessonsService {
-  private baseUrl = 'http://localhost:3000'; // adjust if needed
+  private baseUrl = environment.apiBase;
 
   constructor(private http: HttpClient) {}
 
