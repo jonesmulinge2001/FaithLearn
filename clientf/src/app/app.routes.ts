@@ -14,6 +14,9 @@ import { LessonsComponent } from './admin/lessons/lessons.component';
 import { LessonDetailsComponent } from './admin/lesson-details/lesson-details.component';
 import { StudentLessonsComponent } from './components/studentlessons/studentlessons.component';
 import { LessonViewComponent } from './components/lesson-view/lesson-view.component';
+import { FeedbackComponent } from './components/feedback/feedback.component';
+import { CompletedCoursesComponent } from './components/completed-courses/completed-courses.component';
+import { VisionComponent } from './components/vision/vision.component';
 
 export const routes: Routes = [
     // ==== Public routes (no layout) ====
@@ -32,7 +35,10 @@ export const routes: Routes = [
       { path: '', component: HomeComponent },
       { path: 'home', component: HomeComponent },
       { path: 'lessons', component: StudentLessonsComponent },
+      { path: 'feedback', component: FeedbackComponent },
       { path: 'lessons/:id', component: LessonViewComponent },
+      { path: 'completed-courses', component: CompletedCoursesComponent },
+      { path: 'vission', component: VisionComponent },
     ]
   },
 

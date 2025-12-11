@@ -1,56 +1,105 @@
-<!-- <div class="min-h-screen p-6 bg-slate-50">
-    <div class="max-w-4xl mx-auto">
-      <h1 class="text-2xl font-bold mb-4">Lessons</h1>
-  
-      <div *ngIf="loading" class="text-gray-500">Loading lessons…</div>
-  
-      <div class="grid gap-4 sm:grid-cols-2">
-        <div *ngFor="let lesson of lessons" class="bg-white rounded-lg p-4 shadow">
-          <div class="flex justify-between items-start">
-            <div>
-              <h2 class="text-lg font-semibold">{{ lesson.title }}</h2>
-              <p class="text-sm text-gray-500 mt-1">{{ lesson.createdAt | date:'mediumDate' }}</p>
-            </div>
-  
-            <div class="text-right">
-              <span
-                *ngIf="statuses[lesson.id] === 'COMPLETED'"
-                class="inline-block px-3 py-1 text-xs rounded-full bg-green-100 text-green-800"
-              >Completed</span>
-  
-              <span
-                *ngIf="statuses[lesson.id] === 'IN_PROGRESS'"
-                class="inline-block px-3 py-1 text-xs rounded-full bg-yellow-100 text-yellow-800"
-              >In progress</span>
-  
-              <span
-                *ngIf="statuses[lesson.id] === 'NOT_STARTED'"
-                class="inline-block px-3 py-1 text-xs rounded-full bg-gray-100 text-gray-700"
-              >Not started</span>
-            </div>
+<div class="min-h-screen p-6" style="background-color: #fffcef;">
+  <div class="max-w-4xl mx-auto">
+
+    <!-- HEADER -->
+    <h1 class="text-3xl font-bold mb-6 flex items-center gap-2">
+      <span class="material-icons text-purple-600">menu_book</span>
+      Lessons
+    </h1>
+
+    <!-- LOADING -->
+    <div *ngIf="loading" class="text-gray-500 flex items-center gap-2">
+      <span class="material-icons animate-spin">autorenew</span>
+      Loading lessons…
+    </div>
+
+    <!-- GRID -->
+    <div class="grid gap-6 sm:grid-cols-2 mt-4">
+
+      <div
+        *ngFor="let lesson of lessons"
+        class="bg-white rounded-2xl p-5 shadow-xl border hover:shadow-2xl transition-shadow duration-300"
+      >
+
+        <!-- TOP SECTION -->
+        <div class="flex justify-between items-start">
+          <div>
+            <h2 class="text-xl font-semibold flex items-center gap-2 text-gray-800">
+              <span class="material-icons text-yellow-700">book</span>
+              {{ lesson.title }}
+            </h2>
+
+            <p class="text-sm text-gray-500 mt-1 flex items-center gap-1">
+              <span class="material-icons text-xs">schedule</span>
+              {{ lesson.createdAt | date:'mediumDate' }}
+            </p>
           </div>
-  
-          <p class="text-gray-700 mt-3 line-clamp-3">{{ lesson.content }}</p>
-  
-          <div class="mt-4 flex gap-2">
-            <button
-              (click)="startLesson(lesson)"
-              class="px-3 py-2 rounded-md text-white bg-blue-600 hover:bg-blue-700"
-              *ngIf="statuses[lesson.id] !== 'COMPLETED'"
-            >
-              {{ getStatusLabel(statuses[lesson.id]) }} Lesson
-            </button>
-  
-            <button
-              (click)="reviewLesson(lesson)"
-              class="px-3 py-2 rounded-md text-white bg-green-600 hover:bg-green-700"
+
+          <!-- STATUS BADGE -->
+          <div class="text-right">
+
+            <!-- COMPLETED -->
+            <span
               *ngIf="statuses[lesson.id] === 'COMPLETED'"
+              class="inline-flex items-center gap-1 px-3 py-1 text-xs rounded-full bg-green-100 text-green-800"
             >
-              Review Lesson
-            </button>
+              <span class="material-icons text-sm">verified</span>
+              Completed
+            </span>
+
+            <!-- IN PROGRESS -->
+            <span
+              *ngIf="statuses[lesson.id] === 'IN_PROGRESS'"
+              class="inline-flex items-center gap-1 px-3 py-1 text-xs rounded-full bg-yellow-100 text-yellow-800"
+            >
+              <span class="material-icons text-sm">hourglass_bottom</span>
+              In progress
+            </span>
+
+            <!-- NOT STARTED -->
+            <span
+              *ngIf="statuses[lesson.id] === 'NOT_STARTED'"
+              class="inline-flex items-center gap-1 px-3 py-1 text-xs rounded-full bg-[#e9dcbe] text-gray-700"
+            >
+              <span class="material-icons text-sm">fiber_manual_record</span>
+              Not started
+            </span>
           </div>
         </div>
+
+        <!-- LESSON PREVIEW -->
+        <p class="text-gray-700 mt-4 line-clamp-3">
+          {{ lesson.content }}
+        </p>
+
+        <!-- ACTION BUTTONS -->
+        <div class="mt-5 flex gap-3">
+
+          <!-- START / CONTINUE BUTTON -->
+          <button
+            (click)="startLesson(lesson)"
+            *ngIf="statuses[lesson.id] !== 'COMPLETED'"
+            class="px-4 py-2 rounded-xl text-white font-medium shadow-md
+            bg-gradient-to-r from-[#9535e5] to-[#f39b12] flex items-center gap-2"
+          >
+            <span class="material-icons text-sm">play_arrow</span>
+            {{ getStatusLabel(statuses[lesson.id]) }} Lesson
+          </button>
+
+          <!-- REVIEW BUTTON -->
+          <button
+            (click)="reviewLesson(lesson)"
+            *ngIf="statuses[lesson.id] === 'COMPLETED'"
+            class="px-4 py-2 rounded-xl text-white font-medium shadow-md
+            bg-gradient-to-r from-[#9535e5] to-[#f39b12] flex items-center gap-2"
+          >
+            <span class="material-icons text-sm">visibility</span>
+            Review Lesson
+          </button>
+
+        </div>
+
       </div>
     </div>
   </div>
-   -->
+</div>

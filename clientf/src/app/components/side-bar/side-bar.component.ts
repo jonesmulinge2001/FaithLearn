@@ -13,22 +13,22 @@ export class SidebarComponent implements OnInit {
   showSidebar = true;
 
   navItems = [
-    { label: 'Feed', link: '/home', icon: 'dynamic_feed' },
-    { label: 'Lessons', link: '/lessons', icon: 'diversity_3' },
-    { label: 'Create', link: '/create', icon: 'add_circle' },
-    { label: 'Resources', link: '/resources', icon: 'work' },
-    { label: 'Opportunities', link: '/opportunities', icon: 'business_center' },
-    { label: 'Groups', link: '/groups', icon: 'handshake' },
+    { label: 'Home', link: '/home', icon: 'home' },
+    { label: 'Lessons', link: '/lessons', icon: 'menu_book' },
+    { label: 'Completed Courses', link: '/completed-courses', icon: 'check_circle' },
+    { label: 'Vision and Mission', link: '/vission', icon: 'visibility' },
+    { label: 'Feedback', link: '/feedback', icon: 'rate_review' },
+    { label: 'Profile', link: '/Profile', icon: 'account_circle' },
   ];
 
   getIconGradient(label: string): string {
     const gradients: { [key: string]: string } = {
-      Feed: 'from-pink-500 to-red-500',
+      Home: 'from-pink-500 to-red-500',
       Network: 'from-indigo-500 to-purple-500',
-      Create: 'from-green-500 to-emerald-500',
-      Resources: 'from-blue-500 to-cyan-500',
-      Opportunities: 'from-yellow-500 to-orange-500',
-      UniTok: 'from-rose-500 to-pink-500',
+      'Completed Courses': 'from-green-500 to-emerald-500',
+      Vission: 'from-blue-500 to-cyan-500',
+      Feedback: 'from-yellow-500 to-orange-500',
+      Profile: 'from-rose-500 to-pink-500',
     };
   
     const gradient = gradients[label] || 'from-gray-500 to-gray-700';
