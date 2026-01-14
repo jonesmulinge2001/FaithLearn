@@ -1,7 +1,7 @@
 import { Module } from '@nestjs/common';
 import { LessonsService } from './lessons.service';
 import { LessonsController } from './lessons.controller';
-import { PermissionModule } from 'src/permissions/permission.module';
+import { PermissionModule } from '../permissions/permission.module';
 
 @Module({
   imports: [PermissionModule],
