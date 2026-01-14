@@ -11,13 +11,14 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import { LessonsService } from './lessons.service';
-import { CreateLessonDto, UpdateLessonDto } from 'src/dto/lesson.dto';
-import { CreateStudentQuestionDto } from 'src/dto/student-question.dto';
-import { JwtAuthGuard } from 'src/guards/jwt/jwtAuth.guard';
-import { PermissionGuard } from 'src/guards/permissions.guard';
-import { RequirePermissions } from 'src/decorator/permission.decorator';
-import { Permission } from 'src/permissions/permission.enums';
-import { CreateCourseDto } from 'src/dto/course.dto';
+import { CreateLessonDto, UpdateLessonDto } from '../dto/lesson.dto';
+import { CreateStudentQuestionDto } from '../dto/student-question.dto';
+import { JwtAuthGuard } from '../guards/jwt/jwtAuth.guard';
+import { PermissionGuard } from '../guards/permissions.guard';
+import { RequirePermissions } from '../decorator/permission.decorator';
+import { Permission } from '../permissions/permission.enums';
+import { CreateCourseDto } from '../dto/course.dto';
+
 
 @Controller('lessons')
 export class LessonsController {
