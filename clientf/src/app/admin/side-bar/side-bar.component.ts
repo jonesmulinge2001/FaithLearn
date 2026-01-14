@@ -29,11 +29,10 @@ export class SidebarComponent {
     { id: 'dashboard', label: 'Dashboard Overview', icon: 'dashboard', route: '/admin/dashboard' },
     { id: 'users', label: 'User Management', icon: 'group', route: '/admin/manage-users' },
     { id: 'create', label: 'Create Lessons', icon: 'article', route: '/admin/create-lesson' },
-    { id: 'lessons', label: 'All Lessons', icon: 'chat', route: '/admin/lessons' },
+    { id: 'Courses', label: 'All Lessons', icon: 'chat', route: '/admin/lessons' },
     { id: 'analytics', label: 'Analytics & Growth', icon: 'bar_chart', route: '/admin/manage-analytics' },
-    // { id: 'manage-groups', label: 'Groups Management', icon: 'groups', route: '/admin/manage-groups' }, 
-    // { id: 'Institution-Management', label: 'Institution Management', icon: 'account_balance', route: '/admin/institution-management' },
     { id: 'Logout', label: 'Logout', icon: 'logout', route: '/login' },
+    { id: 'Course', label: 'Create Course', icon: 'article', route: '/admin/course'}
   ];
 
   // --- Modal state ---

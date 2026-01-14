@@ -104,3 +104,37 @@ export interface Course {
   lessons?: Lesson[];
   createdAt?: string;
 }
+
+export interface EnrolledCourse{
+  id: string;
+  courseId: string;
+  studentId: string;
+  enrolledAt?: string;
+}
+
+export interface EnrollResponse {
+  message: string;
+  courseId: string;
+  studentId: string;
+}
+
+export interface AdminUser {
+  id: string;
+  name: string;
+  email: string;
+  role: 'ADMIN' | 'LEARNER';
+}
+
+export interface GenericResponse {
+  message: string;
+}
+
+export interface User {
+  id: string;
+  name: string;
+  email: string;
+  phone: string;
+  role: 'ADMIN' | 'LEARNER';
+  isVerified: boolean;
+  createdAt: string;
+}

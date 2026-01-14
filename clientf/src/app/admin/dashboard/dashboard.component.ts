@@ -1,6 +1,6 @@
 // src/app/components/dashboard/dashboard.component.ts
 import { Component, OnInit } from '@angular/core';
-import { Course, Lesson } from '../../interfaces/interfaces';
+import { Course, EnrolledCourse, Lesson } from '../../interfaces/interfaces';
 import { LessonsService } from '../../services/create-lesson.service';
 import { CommonModule } from '@angular/common';
 
@@ -8,15 +8,17 @@ import { CommonModule } from '@angular/common';
   imports: [CommonModule],
   selector: 'app-dashboard',
   templateUrl: './dashboard.component.html',
-  styleUrls: ['./dashboard.component.css'], // optional, Tailwind can handle styling
+  styleUrls: ['./dashboard.component.css'],
 })
 export class DashboardComponent implements OnInit {
   courses: Course[] = [];
   selectedCourse: Course | null = null;
   lessons: Lesson[] = [];
-  loadingCourses = false;
-  loadingLessons = false;
-  errorMessage = '';
+  loadingCourses: boolean = false;
+  loadingLessons: boolean = false;
+  errorMessage: string = '';
+  enrolledCourses: EnrolledCourse[] = []
+  loading: boolean = false;
 
   constructor(private lessonsService: LessonsService) {}
 
@@ -36,6 +38,21 @@ export class DashboardComponent implements OnInit {
         console.error(err);
         this.loadingCourses = false;
       },
+    });
+  }
+
+  fetchEnrolledCourses(studentId: string) {
+    this.loading = true;
+    this.lessonsService.getEnrolledCourses(studentId).subscribe({
+      next: (res) => {
+        this.enrolledCourses = res;
+        this.loading = false;
+      },
+      error: (err) => {
+        this.errorMessage = 'Failed to get enrolled courses';
+        console.error(err);
+        this.loading = false;
+      }
     });
   }
 

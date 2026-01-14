@@ -17,6 +17,8 @@ import { LessonViewComponent } from './components/lesson-view/lesson-view.compon
 import { FeedbackComponent } from './components/feedback/feedback.component';
 import { CompletedCoursesComponent } from './components/completed-courses/completed-courses.component';
 import { VisionComponent } from './components/vision/vision.component';
+import { CreateCourseComponent } from './admin/create-course/create-course.component';
+import { UsersComponent } from './admin/users/users.component';
 
 export const routes: Routes = [
     // ==== Public routes (no layout) ====
@@ -34,7 +36,7 @@ export const routes: Routes = [
     children: [
       { path: '', component: HomeComponent },
       { path: 'home', component: HomeComponent },
-      { path: 'lessons', component: StudentLessonsComponent },
+      { path: 'courses', component: StudentLessonsComponent },
       { path: 'feedback', component: FeedbackComponent },
       { path: 'lessons/:id', component: LessonViewComponent },
       { path: 'completed-courses', component: CompletedCoursesComponent },
@@ -54,7 +56,9 @@ export const routes: Routes = [
         {
           path: 'lessons/:id',
           component: LessonDetailsComponent
-        }
+        },
+        { path: 'course', component: CreateCourseComponent},
+        {path: 'manage-users', component: UsersComponent}
         
       ]
     },

@@ -14,11 +14,10 @@ export class SidebarComponent implements OnInit {
 
   navItems = [
     { label: 'Home', link: '/home', icon: 'home' },
-    { label: 'Lessons', link: '/lessons', icon: 'menu_book' },
+    { label: 'Courses', link: '/courses', icon: 'menu_book' },
     { label: 'Completed Courses', link: '/completed-courses', icon: 'check_circle' },
     { label: 'Vision and Mission', link: '/vission', icon: 'visibility' },
     { label: 'Feedback', link: '/feedback', icon: 'rate_review' },
-    { label: 'Profile', link: '/Profile', icon: 'account_circle' },
   ];
 
   getIconGradient(label: string): string {
