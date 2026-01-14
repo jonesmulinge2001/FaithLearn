@@ -1,9 +1,9 @@
 /* eslint-disable prettier/prettier */
-/* eslint-disable @typescript-eslint/no-unsafe-argument */
-/* eslint-disable @typescript-eslint/no-unsafe-return */
-/* eslint-disable @typescript-eslint/no-unsafe-member-access */
-/* eslint-disable @typescript-eslint/no-unsafe-call */
-/* eslint-disable @typescript-eslint/no-unsafe-assignment */
+ 
+ 
+ 
+ 
+ 
 /* eslint-disable prettier/prettier */
 import {
   ConflictException,
@@ -15,7 +15,7 @@ import { MailerService } from '../shared/mailer/mailer.service';
 import * as bcrypt from 'bcryptjs';
 import { RegisterUserDto } from 'src/dto/register.user.dto';
 import { LoginUserDto } from 'src/dto/login.user.dto';
-import { PrismaClient } from '@prisma/client';
+import { PrismaClient } from '../../generated/prisma/client';
 
 
 @Injectable()
