@@ -7,7 +7,6 @@
   "license": "UNLICENSED",
   "scripts": {
     "build": "prisma generate && tsc -p tsconfig.build.json",
-    "postbuild": "cp -r generated dist/",
     "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
     "start": "npx nest start",
     "start:dev": "npx nest start --watch",
