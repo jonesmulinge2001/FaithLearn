@@ -1,9 +1,3 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
-// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
-// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
-
 generator client {
   provider = "prisma-client"
   output   = "../generated/prisma"
@@ -15,34 +9,25 @@ datasource db {
 }
 
 model User {
-  id                   String    @id @default(uuid())
-  email                String    @unique
-  password             String
-  name                 String
-  role                 UserRole  @default(LEARNER)
-  phone                String?   @unique
-  profile              Profile?
-  createdAt            DateTime  @default(now())
-  updatedAt            DateTime  @updatedAt
-  isVerified           Boolean   @default(false)
-  resetToken           String?
-  resetTokenExpiresAt  DateTime?
-  verifyToken          String
-  verifyTokenExpiresAt DateTime?
-  lastLogin            DateTime?
-  isDeleted            Boolean   @default(false)
-  deletedAt            DateTime?
-
+  id                     String                  @id @default(uuid())
+  email                  String                  @unique
+  password               String
+  name                   String
+  role                   UserRole                @default(LEARNER)
+  phone                  String?                 @unique
+  createdAt              DateTime                @default(now())
+  updatedAt              DateTime                @updatedAt
+  isVerified             Boolean                 @default(false)
+  resetToken             String?
+  resetTokenExpiresAt    DateTime?
+  verifyToken            String
+  verifyTokenExpiresAt   DateTime?
+  lastLogin              DateTime?
+  isDeleted              Boolean                 @default(false)
+  deletedAt              DateTime?
+  profile                Profile?
+  lessonAnswers          StudentLessonAnswer[]
   studentLessonQuestions StudentLessonQuestion[]
-
-  studentLessons StudentLesson[]
-  lessonAnswers StudentLessonAnswer[]
-  studentCourses StudentCourse[]
-}
-
-enum UserRole {
-  ADMIN
-  LEARNER
 }
 
 model Profile {
@@ -51,46 +36,28 @@ model Profile {
   bio          String?
   profileImage String?
   coverPhoto   String?
-  // Relation to User
   userId       String  @unique
   user         User    @relation(fields: [userId], references: [id])
 }
 
 model Lesson {
-  id        String   @id @default(uuid())
-  title     String
-  content   String
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  isDeleted Boolean @default(false)
-
-  courseId  String 
-
-  course    Course   @relation(fields: [courseId], references: [id])
+  id               String                  @id @default(uuid())
+  title            String
+  content          String
+  createdAt        DateTime                @default(now())
+  updatedAt        DateTime                @updatedAt
+  isDeleted        Boolean                 @default(false)
   questions        LessonQuestion[]
   studentQuestions StudentLessonQuestion[]
-  studentLessons StudentLesson[] 
-}
-
-model Course {
-  id       String   @id @default(cuid())
-  title    String
-  lessons  Lesson[]
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  isDeleted Boolean @default(false)
-
-  studentCourses StudentCourse[]
 }
 
 model LessonQuestion {
-  id       String  @id @default(uuid())
+  id       String                @id @default(uuid())
   lessonId String
   question String
   answer   String?
-
-  lesson  Lesson                @relation(fields: [lessonId], references: [id], onDelete: Cascade)
-  answers StudentLessonAnswer[]
+  lesson   Lesson                @relation(fields: [lessonId], references: [id], onDelete: Cascade)
+  answers  StudentLessonAnswer[]
 }
 
 model StudentLessonQuestion {
@@ -100,43 +67,21 @@ model StudentLessonQuestion {
   question  String
   answer    String?
   createdAt DateTime @default(now())
-
-  lesson  Lesson @relation(fields: [lessonId], references: [id], onDelete: Cascade)
-  // If you have a User model:
-  student User   @relation(fields: [studentId], references: [id])
+  lesson    Lesson   @relation(fields: [lessonId], references: [id], onDelete: Cascade)
+  student   User     @relation(fields: [studentId], references: [id])
 }
 
 model StudentLessonAnswer {
-  id         String   @id @default(uuid())
+  id         String         @id @default(uuid())
   studentId  String
   questionId String
   answer     String
-  createdAt  DateTime @default(now())
-
-  student  User           @relation(fields: [studentId], references: [id])
-  question LessonQuestion @relation(fields: [questionId], references: [id], onDelete: Cascade)
+  createdAt  DateTime       @default(now())
+  question   LessonQuestion @relation(fields: [questionId], references: [id], onDelete: Cascade)
+  student    User           @relation(fields: [studentId], references: [id])
 }
 
-model StudentLesson {
-  id        String   @id @default(uuid())
-  studentId String
-  lessonId  String
-  startedAt DateTime @default(now())
-
-  student User   @relation(fields: [studentId], references: [id])
-  lesson  Lesson @relation(fields: [lessonId], references: [id])
-
-  @@unique([studentId, lessonId]) // prevent duplicate enrollment
-}
-
-model StudentCourse {
-  id        String   @id @default(uuid())
-  studentId String
-  courseId  String
-  enrolledAt DateTime @default(now())
-
-  student User   @relation(fields: [studentId], references: [id])
-  course  Course @relation(fields: [courseId], references: [id])
-
-  @@unique([studentId, courseId]) // prevent duplicate enrollment
+enum UserRole {
+  ADMIN
+  LEARNER
 }
