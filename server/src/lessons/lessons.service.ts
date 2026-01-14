@@ -1,8 +1,5 @@
 /* eslint-disable prettier/prettier */
- 
- 
- 
- 
+
 /* eslint-disable prettier/prettier */
 
 /* eslint-disable prettier/prettier */
@@ -11,15 +8,14 @@
 
 /* eslint-disable prettier/prettier */
 import {
-  
   ConflictException,
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
 import { PrismaClient } from 'generated/prisma/client';
-import { CreateCourseDto } from 'src/dto/course.dto';
-import { CreateLessonDto, UpdateLessonDto } from 'src/dto/lesson.dto';
-import { CreateStudentQuestionDto } from 'src/dto/student-question.dto';
+import { CreateCourseDto } from '../dto/course.dto';
+import { CreateLessonDto, UpdateLessonDto } from '../dto/lesson.dto';
+import { CreateStudentQuestionDto } from '../dto/student-question.dto';
 
 @Injectable()
 export class LessonsService {
@@ -70,7 +66,7 @@ export class LessonsService {
   // Soft delete course
   async deleteCourse(id: string) {
     const course = await this.findCourse(id);
-    if(!course) return
+    if (!course) return;
     return this.prisma.course.update({
       where: { id },
       data: { isDeleted: true },
@@ -145,11 +141,10 @@ export class LessonsService {
         },
       },
     });
-  
+
     if (!course) throw new NotFoundException('Course not found');
     return course;
   }
-  
 
   // Get ALL lessons
   async findAll() {
