@@ -1,15 +1,23 @@
 /* eslint-disable prettier/prettier */
-/* eslint-disable @typescript-eslint/no-unsafe-assignment */
-/* eslint-disable prettier/prettier */
-/* eslint-disable @typescript-eslint/no-unsafe-member-access */
-/* eslint-disable @typescript-eslint/require-await */
-/* eslint-disable @typescript-eslint/no-unsafe-call */
-/* eslint-disable @typescript-eslint/no-unsafe-return */
+ 
+ 
+ 
+ 
 /* eslint-disable prettier/prettier */
 
 /* eslint-disable prettier/prettier */
-import { Injectable, NotFoundException } from '@nestjs/common';
+
+/* eslint-disable prettier/prettier */
+
+/* eslint-disable prettier/prettier */
+import {
+  
+  ConflictException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { PrismaClient } from 'generated/prisma/client';
+import { CreateCourseDto } from 'src/dto/course.dto';
 import { CreateLessonDto, UpdateLessonDto } from 'src/dto/lesson.dto';
 import { CreateStudentQuestionDto } from 'src/dto/student-question.dto';
 
@@ -18,55 +26,56 @@ export class LessonsService {
   constructor() {}
   private prisma = new PrismaClient();
 
-
   // =========================
-// COURSE METHODS
-// =========================
+  // COURSE METHODS
+  // =========================
 
-// Create course
-async createCourse(data: { title: string; description?: string }) {
-  return this.prisma.course.create({
-    data,
-  });
-}
+  // Create course
+  async createCourse(data: CreateCourseDto) {
+    return this.prisma.course.create({
+      data,
+    });
+  }
 
-// Get all courses
-async findAllCourses() {
-  return this.prisma.course.findMany({
-    where: { isDeleted: false },
-    orderBy: { createdAt: 'desc' },
-  });
-}
+  // Get all courses
+  async findAllCourses() {
+    return this.prisma.course.findMany({
+      where: { isDeleted: false },
+      orderBy: { createdAt: 'desc' },
+    });
+  }
 
-// Get one course
-async findCourse(id: string) {
-  const course = await this.prisma.course.findFirst({
-    where: { id, isDeleted: false },
-  });
+  // Get one course
+  async findCourse(id: string) {
+    const course = await this.prisma.course.findFirst({
+      where: { id, isDeleted: false },
+    });
 
-  if (!course) throw new NotFoundException('Course not found');
-  return course;
-}
+    if (!course) throw new NotFoundException('Course not found');
+    return course;
+  }
 
-// Update course
-async updateCourse(id: string, data: { title?: string; description?: string }) {
-  await this.findCourse(id);
-  return this.prisma.course.update({
-    where: { id },
-    data,
-  });
-}
+  // Update course
+  async updateCourse(
+    id: string,
+    data: { title?: string; description?: string },
+  ) {
+    await this.findCourse(id);
+    return this.prisma.course.update({
+      where: { id },
+      data,
+    });
+  }
 
-// Soft delete course
-async deleteCourse(id: string) {
-  const course = await this.findCourse(id);
-  return this.prisma.course.update({
-    where: { id },
-    data: { isDeleted: true },
-  });
-}
-
-
+  // Soft delete course
+  async deleteCourse(id: string) {
+    const course = await this.findCourse(id);
+    if(!course) return
+    return this.prisma.course.update({
+      where: { id },
+      data: { isDeleted: true },
+    });
+  }
 
   // Create Lesson + Questions
   async createLesson(dto: CreateLessonDto) {
@@ -82,7 +91,6 @@ async deleteCourse(id: string) {
       include: { questions: true },
     });
   }
-  
 
   // Get all lessons (only those not deleted)
   async findAllByCourse(courseId: string) {
@@ -92,7 +100,6 @@ async deleteCourse(id: string) {
       orderBy: { createdAt: 'desc' },
     });
   }
-  
 
   // Get single lesson
   async findOne(id: string) {
@@ -126,15 +133,32 @@ async deleteCourse(id: string) {
     if (!lesson) throw new NotFoundException('Lesson not found');
     return lesson;
   }
+
+  async findCourseWithLessons(courseId: string) {
+    const course = await this.prisma.course.findFirst({
+      where: { id: courseId, isDeleted: false },
+      include: {
+        lessons: {
+          where: { isDeleted: false },
+          select: { title: true, content: true, questions: true },
+          orderBy: { createdAt: 'asc' },
+        },
+      },
+    });
   
+    if (!course) throw new NotFoundException('Course not found');
+    return course;
+  }
+  
+
   // Get ALL lessons
-async findAll() {
-  return this.prisma.lesson.findMany({
-    where: { isDeleted: false },
-    include: { questions: true },
-    orderBy: { createdAt: 'desc' },
-  });
-}
+  async findAll() {
+    return this.prisma.lesson.findMany({
+      where: { isDeleted: false },
+      include: { questions: true },
+      orderBy: { createdAt: 'desc' },
+    });
+  }
 
   // Soft delete lesson
   async deletelesson(id: string) {
@@ -290,5 +314,68 @@ async findAll() {
       },
     });
   }
-  
+
+  // Enrollment
+  async enrollStudentToCourse(studentId: string, courseId: string) {
+    const student = await this.prisma.user.findUnique({
+      where: { id: studentId },
+    });
+
+    if (!student) {
+      throw new NotFoundException('Student not found');
+    }
+
+    const course = await this.prisma.course.findUnique({
+      where: { id: courseId },
+    });
+
+    if (!course) {
+      throw new NotFoundException('Course not found');
+    }
+
+    // Check if student is already enrolled
+    const existingEnrollment = await this.prisma.studentCourse.findFirst({
+      where: {
+        studentId,
+        courseId,
+      },
+    });
+
+    if (existingEnrollment) {
+      throw new ConflictException('Student is already enrolled in this course');
+    }
+
+    // Create enrollment
+    const enrollment = await this.prisma.studentCourse.create({
+      data: {
+        studentId,
+        courseId,
+      },
+    });
+
+    return {
+      message: 'Student enrolled successfully in a course',
+      enrollment,
+    };
+  }
+
+  // get courses student has enrolled
+  async getEnrolledCourses(studentId: string) {
+    const student = await this.prisma.user.findUnique({
+      where: { id: studentId },
+    });
+
+    if (!student) {
+      throw new NotFoundException('Student not found');
+    }
+
+    return this.prisma.studentCourse.findMany({
+      where: { studentId },
+      include: {
+        course: {
+          select: { id: true, title: true },
+        },
+      },
+    });
+  }
 }

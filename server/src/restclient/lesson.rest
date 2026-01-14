@@ -1,9 +1,12 @@
 ### BASE URL
 @baseUrl = http://localhost:3000
 
+@studentId = b3ceb44e-05cf-44f3-aef3-259cf46043ed
+@courseId = cmikux2ar0000tud81o3kj9ca
+
 ### AUTH TOKENS
-@adminToken = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIzMTBmOWI5NS1hYjQ3LTRjZjUtYjhmYi00NmY1MjIyYzRkMDQiLCJlbWFpbCI6ImpvbmF0aGFubXVsaW5nZW13YW5kaUBnbWFpbC5jb20iLCJyb2xlIjoiQURNSU4iLCJpYXQiOjE3NjQ0NTQ4NjUsImV4cCI6MTc2NDU0MTI2NX0.xV7VBPre5-mRD-DGFQCcXfPm8nbcMimIeq4U3TiTjHs
-@studentToken = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJjN2Q0...
+@adminToken = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIzMTBmOWI5NS1hYjQ3LTRjZjUtYjhmYi00NmY1MjIyYzRkMDQiLCJlbWFpbCI6ImpvbmF0aGFubXVsaW5nZW13YW5kaUBnbWFpbC5jb20iLCJyb2xlIjoiQURNSU4iLCJpYXQiOjE3NjU1NjI4OTQsImV4cCI6MTc2NTY0OTI5NH0.4J5FA7CkwPY1AkSvLVUXXDNhOfw0yfZAICTLfxZ-1-U
+@studentToken = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJiM2NlYjQ0ZS0wNWNmLTQ0ZjMtYWVmMy0yNTljZjQ2MDQzZWQiLCJlbWFpbCI6ImoyNjUxNTc2MkBnbWFpbC5jb20iLCJyb2xlIjoiTEVBUk5FUiIsImlhdCI6MTc2NTU2MTY5MywiZXhwIjoxNzY1NjQ4MDkzfQ.wIIVskGwTTSs8BypZE-1bM_eo7c1m-Jq6liMz8NdgJw
 
 #######################################################
 # A. CREATE COURSE (Admin)
@@ -49,7 +52,7 @@ Authorization: Bearer {{adminToken}}
 # F. GET ALL LESSONS BY COURSE
 #######################################################
 GET {{baseUrl}}/lessons/courses/cmikux2ar0000tud81o3kj9ca
-Authorization: Bearer {{adminToken}}
+Authorization: Bearer {{studentToken}}
 
 #######################################################
 # G. CREATE LESSON
@@ -153,3 +156,24 @@ Content-Type: application/json
 #######################################################
 GET {{baseUrl}}/lessons/LESSON_ID/students
 Authorization: Bearer {{adminToken}}
+
+#######################################################
+# ENROLL STUDENT TO A COURSE
+#######################################################
+POST {{baseUrl}}/lessons/enroll/{{studentId}}/{{courseId}}
+Authorization: Bearer {{studentToken}}
+Content-Type: application/json
+
+
+#######################################################
+# GET COURSES A STUDENT IS ENROLLED IN (Admin)
+#######################################################
+GET {{baseUrl}}/lessons/enrolled-courses/{{studentId}}
+Authorization: Bearer {{adminToken}}
+
+
+#######################################################
+#Get a single course with all its lessons
+#######################################################
+GET {{baseUrl}}/courses/{{courseId}}/with-lessons
+Authorization: Bearer {{studentToken}}

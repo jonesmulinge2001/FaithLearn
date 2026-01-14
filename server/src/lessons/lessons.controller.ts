@@ -1,6 +1,5 @@
 /* eslint-disable prettier/prettier */
-/* eslint-disable @typescript-eslint/no-unsafe-return */
-/* eslint-disable prettier/prettier */
+ 
 import {
   Controller,
   Get,
@@ -18,16 +17,28 @@ import { JwtAuthGuard } from 'src/guards/jwt/jwtAuth.guard';
 import { PermissionGuard } from 'src/guards/permissions.guard';
 import { RequirePermissions } from 'src/decorator/permission.decorator';
 import { Permission } from 'src/permissions/permission.enums';
+import { CreateCourseDto } from 'src/dto/course.dto';
 
 @Controller('lessons')
 export class LessonsController {
   constructor(private readonly lessonsService: LessonsService) {}
 
+  // =========================
+  // COURSE ROUTES
+  // =========================
+
+  // Get a single course with all its lessons (specific, before :id)
+  @UseGuards(JwtAuthGuard)
+  @Get('courses/:courseId/with-lessons')
+  async getCourseWithLessons(@Param('courseId') courseId: string) {
+    return this.lessonsService.findCourseWithLessons(courseId);
+  }
+
   // CREATE COURSE
   @UseGuards(JwtAuthGuard, PermissionGuard)
   @RequirePermissions(Permission.MANAGE_LESSONS)
   @Post('/courses')
-  async createCourse(@Body() data: { title: string; description?: string }) {
+  async createCourse(@Body() data: CreateCourseDto) {
     return this.lessonsService.createCourse(data);
   }
 
@@ -44,11 +55,10 @@ export class LessonsController {
   }
 
   // GET lessons by course
-@Get('course/:courseId')
-async getLessonsByCourse(@Param('courseId') courseId: string) {
-  return this.lessonsService.findAllByCourse(courseId);
-}
-
+  @Get('course/:courseId')
+  async getLessonsByCourse(@Param('courseId') courseId: string) {
+    return this.lessonsService.findAllByCourse(courseId);
+  }
 
   // UPDATE COURSE
   @UseGuards(JwtAuthGuard, PermissionGuard)
@@ -60,6 +70,7 @@ async getLessonsByCourse(@Param('courseId') courseId: string) {
   ) {
     return this.lessonsService.updateCourse(id, data);
   }
+
   // DELETE COURSE
   @UseGuards(JwtAuthGuard, PermissionGuard)
   @RequirePermissions(Permission.MANAGE_LESSONS)
@@ -67,6 +78,10 @@ async getLessonsByCourse(@Param('courseId') courseId: string) {
   async deleteCourse(@Param('id') id: string) {
     return this.lessonsService.deleteCourse(id);
   }
+
+  // =========================
+  // LESSON ROUTES
+  // =========================
 
   // Create lesson
   @UseGuards(JwtAuthGuard, PermissionGuard)
@@ -82,7 +97,21 @@ async getLessonsByCourse(@Param('courseId') courseId: string) {
     return this.lessonsService.findAll();
   }
 
-  // Get one lesson
+  // Get questions for one lesson (specific)
+  @Get(':lessonId/questions')
+  async getQuestionsByLesson(@Param('lessonId') lessonId: string) {
+    return this.lessonsService.getQuestionsByLesson(lessonId);
+  }
+
+  // Get students for a lesson (specific)
+  @UseGuards(JwtAuthGuard, PermissionGuard)
+  @RequirePermissions(Permission.MANAGE_LESSONS)
+  @Get(':lessonId/students')
+  async getStudentsForLesson(@Param('lessonId') lessonId: string) {
+    return this.lessonsService.getStudentsForLesson(lessonId);
+  }
+
+  // Get one lesson (catch-all, should be last among lesson routes)
   @Get(':id')
   async findOne(@Param('id') id: string) {
     return this.lessonsService.findOne(id);
@@ -104,7 +133,11 @@ async getLessonsByCourse(@Param('courseId') courseId: string) {
     return this.lessonsService.deletelesson(id);
   }
 
-  // Student submits question about a lesson
+  // =========================
+  // STUDENT QUESTIONS & ANSWERS
+  // =========================
+
+  // Submit question
   @Post(':lessonId/questions/:studentId')
   async submitStudentQuestion(
     @Param('lessonId') lessonId: string,
@@ -120,12 +153,6 @@ async getLessonsByCourse(@Param('courseId') courseId: string) {
     return this.lessonsService.getAllStudentQuestions();
   }
 
-  // Get questions for one lesson
-  @Get(':lessonId/questions')
-  async getQuestionsByLesson(@Param('lessonId') lessonId: string) {
-    return this.lessonsService.getQuestionsByLesson(lessonId);
-  }
-
   // Get questions by student
   @UseGuards(JwtAuthGuard, PermissionGuard)
   @RequirePermissions(Permission.MANAGE_LESSONS)
@@ -134,7 +161,7 @@ async getLessonsByCourse(@Param('courseId') courseId: string) {
     return this.lessonsService.getQuestionsByStudent(studentId);
   }
 
-  // Admin reply to a student question
+  // Admin reply to student question
   @UseGuards(JwtAuthGuard, PermissionGuard)
   @RequirePermissions(Permission.MANAGE_LESSONS)
   @Post('/questions/reply/:questionId')
@@ -145,7 +172,7 @@ async getLessonsByCourse(@Param('courseId') courseId: string) {
     return this.lessonsService.replyToStudentQuestion(questionId, answer);
   }
 
-  // Student submits answer to lesson question
+  // Submit student answer
   @Post('/answers/:studentId/:questionId')
   async submitStudentAnswer(
     @Param('studentId') studentId: string,
@@ -159,7 +186,7 @@ async getLessonsByCourse(@Param('courseId') courseId: string) {
     );
   }
 
-  // Student: get their own answers
+  // Get student's own answers
   @UseGuards(JwtAuthGuard, PermissionGuard)
   @RequirePermissions(Permission.COMPLETE_LESSON)
   @Get('student/:studentId/answers')
@@ -173,6 +200,7 @@ async getLessonsByCourse(@Param('courseId') courseId: string) {
     return this.lessonsService.getAnswersForQuestion(questionId);
   }
 
+  // Admin reply to student answer
   @UseGuards(JwtAuthGuard, PermissionGuard)
   @RequirePermissions(Permission.MANAGE_LESSONS)
   @Post('/answers/reply/:answerId')
@@ -183,10 +211,22 @@ async getLessonsByCourse(@Param('courseId') courseId: string) {
     return this.lessonsService.replyToStudentAnswer(answerId, reply);
   }
 
-  @UseGuards(JwtAuthGuard, PermissionGuard)
-  @RequirePermissions(Permission.MANAGE_LESSONS)
-  @Get(':lessonId/students')
-  async getStudentsForLesson(@Param('lessonId') lessonId: string) {
-    return this.lessonsService.getStudentsForLesson(lessonId);
+  // =========================
+  // ENROLLMENT
+  // =========================
+
+  @UseGuards(JwtAuthGuard)
+  @Post('enroll/:studentId/:courseId')
+  async enrollStudentToCourse(
+    @Param('studentId') studentId: string,
+    @Param('courseId') courseId: string,
+  ) {
+    return this.lessonsService.enrollStudentToCourse(studentId, courseId);
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Get('enrolled-courses/:studentId')
+  async getEnrolledCourses(@Param('studentId') studentId: string) {
+    return this.lessonsService.getEnrolledCourses(studentId);
   }
 }

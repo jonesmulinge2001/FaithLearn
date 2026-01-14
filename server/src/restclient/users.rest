@@ -1,0 +1,8 @@
+
+
+@adminToken = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIzMTBmOWI5NS1hYjQ3LTRjZjUtYjhmYi00NmY1MjIyYzRkMDQiLCJlbWFpbCI6ImpvbmF0aGFubXVsaW5nZW13YW5kaUBnbWFpbC5jb20iLCJyb2xlIjoiQURNSU4iLCJpYXQiOjE3Njc0OTg2NjUsImV4cCI6MTc2NzU4NTA2NX0.aXa3K1LhcaWXmZdzPn74Spx4PqThe0YrMsdEb3l5lw0
+
+### Get all users
+POST http://localhost:3000/admin/user
+
+Authorization: Bearer {{adminToken}}

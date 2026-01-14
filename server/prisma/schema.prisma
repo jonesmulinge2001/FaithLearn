@@ -37,6 +37,7 @@ model User {
 
   studentLessons StudentLesson[]
   lessonAnswers StudentLessonAnswer[]
+  studentCourses StudentCourse[]
 }
 
 enum UserRole {
@@ -78,6 +79,8 @@ model Course {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
   isDeleted Boolean @default(false)
+
+  studentCourses StudentCourse[]
 }
 
 model LessonQuestion {
@@ -124,4 +127,16 @@ model StudentLesson {
   lesson  Lesson @relation(fields: [lessonId], references: [id])
 
   @@unique([studentId, lessonId]) // prevent duplicate enrollment
+}
+
+model StudentCourse {
+  id        String   @id @default(uuid())
+  studentId String
+  courseId  String
+  enrolledAt DateTime @default(now())
+
+  student User   @relation(fields: [studentId], references: [id])
+  course  Course @relation(fields: [courseId], references: [id])
+
+  @@unique([studentId, courseId]) // prevent duplicate enrollment
 }
