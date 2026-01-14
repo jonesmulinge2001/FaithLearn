@@ -49,6 +49,7 @@
       {{ item.icon }}
     </span>
 
-    <span class="text-[0.7rem] leading-tight">{{ item.label }}</span>
+    <!-- Hide text on small screens, show on medium and up if needed -->
+    <span class="hidden sm:inline text-[0.7rem] leading-tight">{{ item.label }}</span>
   </a>
 </div>
