@@ -26,6 +26,8 @@ model User {
   isDeleted              Boolean                 @default(false)
   deletedAt              DateTime?
   profile                Profile?
+  StudentCourse          StudentCourse[]
+  StudentLesson          StudentLesson[]
   lessonAnswers          StudentLessonAnswer[]
   studentLessonQuestions StudentLessonQuestion[]
 }
@@ -47,7 +49,10 @@ model Lesson {
   createdAt        DateTime                @default(now())
   updatedAt        DateTime                @updatedAt
   isDeleted        Boolean                 @default(false)
+  courseId         String
+  Course           Course                  @relation(fields: [courseId], references: [id])
   questions        LessonQuestion[]
+  StudentLesson    StudentLesson[]
   studentQuestions StudentLessonQuestion[]
 }
 
@@ -79,6 +84,38 @@ model StudentLessonAnswer {
   createdAt  DateTime       @default(now())
   question   LessonQuestion @relation(fields: [questionId], references: [id], onDelete: Cascade)
   student    User           @relation(fields: [studentId], references: [id])
+}
+
+model Course {
+  id            String          @id @default(uuid())
+  title         String
+  createdAt     DateTime        @default(now())
+  updatedAt     DateTime        @updatedAt    
+  isDeleted     Boolean         @default(false)
+  Lesson        Lesson[]
+  StudentCourse StudentCourse[]
+}
+
+model StudentCourse {
+  id         String   @id @default(uuid())
+  studentId  String
+  courseId   String
+  enrolledAt DateTime @default(now())
+  Course     Course   @relation(fields: [courseId], references: [id])
+  User       User     @relation(fields: [studentId], references: [id])
+
+  @@unique([studentId, courseId])
+}
+
+model StudentLesson {
+  id        String   @id
+  studentId String
+  lessonId  String
+  startedAt DateTime @default(now())
+  Lesson    Lesson   @relation(fields: [lessonId], references: [id])
+  User      User     @relation(fields: [studentId], references: [id])
+
+  @@unique([studentId, lessonId])
 }
 
 enum UserRole {

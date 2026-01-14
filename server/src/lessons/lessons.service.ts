@@ -136,7 +136,7 @@ export class LessonsService {
     const course = await this.prisma.course.findFirst({
       where: { id: courseId, isDeleted: false },
       include: {
-        lessons: {
+        Lesson: {
           where: { isDeleted: false },
           select: { title: true, content: true, questions: true },
           orderBy: { createdAt: 'asc' },
@@ -305,7 +305,7 @@ export class LessonsService {
     return this.prisma.studentLesson.findMany({
       where: { lessonId },
       include: {
-        student: {
+        User: {
           select: { id: true, name: true, email: true },
         },
       },
@@ -369,7 +369,7 @@ export class LessonsService {
     return this.prisma.studentCourse.findMany({
       where: { studentId },
       include: {
-        course: {
+        Course: {
           select: { id: true, title: true },
         },
       },
