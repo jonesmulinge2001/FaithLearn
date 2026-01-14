@@ -6,11 +6,12 @@
 import { AuthGuard } from '@nestjs/passport';
 import { UserManagementService } from './user-management.service';
 import { Controller, Delete, Get, Param, UseGuards } from '@nestjs/common';
-import { PermissionGuard } from 'src/guards/permissions.guard';
-import { RequirePermissions } from 'src/decorator/permission.decorator';
-import { Permission } from 'src/permissions/permission.enums';
-import { ApiResponse } from 'src/interfaces/apiResponse';
-import { User } from 'src/interfaces/user.interface';
+import { PermissionGuard } from '../guards/permissions.guard';
+import { RequirePermissions } from '../decorator/permission.decorator';
+import { Permission } from '../permissions/permission.enums';
+import { ApiResponse } from '../interfaces/apiResponse';
+import { User } from '../interfaces/user.interface';
+
 
 @Controller('admin/user')
 export class UserManagementController {
