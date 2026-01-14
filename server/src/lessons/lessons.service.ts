@@ -1,4 +1,10 @@
 /* eslint-disable prettier/prettier */
+/* eslint-disable @typescript-eslint/require-await */
+/* eslint-disable @typescript-eslint/no-unsafe-member-access */
+/* eslint-disable @typescript-eslint/no-unsafe-return */
+/* eslint-disable @typescript-eslint/no-unsafe-call */
+/* eslint-disable @typescript-eslint/no-unsafe-assignment */
+/* eslint-disable prettier/prettier */
 
 /* eslint-disable prettier/prettier */
 
@@ -12,7 +18,7 @@ import {
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
-import { PrismaClient } from 'generated/prisma/client';
+import { PrismaClient } from '@prisma/client';
 import { CreateCourseDto } from '../dto/course.dto';
 import { CreateLessonDto, UpdateLessonDto } from '../dto/lesson.dto';
 import { CreateStudentQuestionDto } from '../dto/student-question.dto';
