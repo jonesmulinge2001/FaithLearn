@@ -7,8 +7,8 @@ import { Body, Controller, HttpException, HttpStatus, Post, UnauthorizedExceptio
 import { AuthService } from './auth.service';
 import { RegisterUserDto } from '../dto/register.user.dto';
 import { LoginUserDto } from '../dto/login.user.dto';
-import { ApiResponse } from 'src/interfaces/apiResponse';
-import { SafeUser } from 'src/interfaces/user.interface';
+import { ApiResponse } from '../interfaces/apiResponse';
+import { SafeUser } from '../interfaces/user.interface';
 
 @Controller('auth')
 export class AuthController {
