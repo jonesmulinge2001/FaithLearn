@@ -6,7 +6,7 @@
 import { Body, Controller, HttpException, HttpStatus, Post, UnauthorizedException } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { RegisterUserDto } from '../dto/register.user.dto';
-import { LoginUserDto } from 'src/dto/login.user.dto';
+import { LoginUserDto } from '../dto/login.user.dto';
 import { ApiResponse } from 'src/interfaces/apiResponse';
 import { SafeUser } from 'src/interfaces/user.interface';
 
