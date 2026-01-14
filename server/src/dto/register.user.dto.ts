@@ -8,7 +8,8 @@
 
 import { Transform } from "class-transformer";
 import { IsEmail, IsEnum, IsNotEmpty, IsPhoneNumber, IsString, MaxLength, MinLength } from "class-validator";
-import { UserRole } from "generated/prisma/client";
+import { UserRole } from "../../generated/prisma/client";
+
 
 export class RegisterUserDto {
     @IsString({message: 'Name must be a string'})
@@ -27,10 +28,11 @@ export class RegisterUserDto {
     @MinLength(6, {message: 'Password must be at least 6 characters long'})
     password: string;
 
-    @IsNotEmpty({message: 'Password confirmation is required'})
+    @IsNotEmpty({message: 'Phone number is required'})
     @IsPhoneNumber('KE', {message: 'Invalid phone number format (e.g., +2547...).'})
     @Transform(({value}) => value.trim())
     phone: string
+    
 
     @IsNotEmpty({message: 'Role is required'})
     @IsString({message: 'Role must be a string'})
